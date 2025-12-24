@@ -1,22 +1,19 @@
 import { OrbitControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import React from 'react'
-// import { Tree } from './components/Tree'
-import Tree1 from './components/Tree1'
+import React, { useState } from 'react'
+import { Tree } from './components/Tree'
+import Navbar from './components/Navbar'
 
 const App = () => {
+  const [present, setPresent] = useState(false)
+
   return (
-    <div className='text-5xl w-screen h-screen'>
+    <div className='w-screen h-screen'>
+      <Navbar setPresent={setPresent} />
       <Canvas>
-        <color args={["white"]} attach="background" />
+        <color args={["#626F70"]} attach="background" /> {/* Make it gradient */}
         <ambientLight intensity={3} />
-        {/* <pointLight/> */}
-        {/* <mesh>
-          <boxGeometry />
-          <meshStandardMaterial color={"blue"} />
-        </mesh> */}
-        {/* <Tree /> */}
-        <Tree1/>
+        <Tree />
         <OrbitControls />
       </Canvas>
     </div>
