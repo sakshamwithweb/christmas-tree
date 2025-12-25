@@ -5,33 +5,27 @@ const Items = () => {
     const items = [
         {
             img: "/ball.png",
-            label: "A new ball",
-            model: "/ball.glb"
+            label: "A new ball"
         },
         {
             img: "/ball.png",
-            label: "A recent ball",
-            model: "/ball.glb"
+            label: "A recent ball"
         },
         {
             img: "/ball.png",
-            label: "A mysterious ball",
-            model: "/ball.glb"
+            label: "A mysterious ball"
         },
         {
             img: "/ball.png",
-            label: "A chocolate ball",
-            model: "/ball.glb"
+            label: "A chocolate ball"
         },
         {
             img: "/ball.png",
-            label: "A favourite ball",
-            model: "/ball.glb"
+            label: "A favourite ball"
         },
         {
             img: "/ball.png",
-            label: "A edible ball",
-            model: "/ball.glb"
+            label: "A edible ball"
         }
     ]
 

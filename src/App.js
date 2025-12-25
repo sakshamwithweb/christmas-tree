@@ -15,6 +15,8 @@ const App = () => {
       <Canvas>
         <color args={["#626F70"]} attach="background" /> {/* Make it gradient */}
         <ambientLight intensity={3} />
+        <pointLight position={[10, 10, 10]} decay={0} intensity={2} />
+        <pointLight position={[-10, -10, -10]} decay={0} intensity={2} />
         {/* <Tree /> */}
         <Ball />
         <OrbitControls enableDamping />

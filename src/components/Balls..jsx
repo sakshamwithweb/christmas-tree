@@ -14,7 +14,7 @@ export function Ball(props) {
     const { nodes, materials } = useGLTF('/christmas_balls.glb')
     return (
         <group {...props} dispose={null}>
-            <group rotation={[-Math.PI / 2, 0, 0]}>
+            <group scale={2} rotation={[-Math.PI / 2, 0, 0]}>
                 <group position={[-0.4, -0.081, -0.076]}>
                     <mesh geometry={nodes.Pallina_natalizia_01_0.geometry} material={materials.Materiale_220} />
                     <mesh geometry={nodes.Pallina_natalizia_01_1.geometry} material={materials.Materiale_221} />
