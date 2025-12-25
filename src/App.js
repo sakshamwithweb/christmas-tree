@@ -3,19 +3,23 @@ import { Canvas } from '@react-three/fiber'
 import React, { useState } from 'react'
 import { Tree } from './components/Tree'
 import Navbar from './components/Navbar'
+import Items from './components/Items'
+import { Ball } from './components/Balls.'
 
 const App = () => {
   const [present, setPresent] = useState(false)
 
   return (
     <div className='w-screen h-screen'>
-      <Navbar setPresent={setPresent} />
+      <Navbar present={present} setPresent={setPresent} />
       <Canvas>
         <color args={["#626F70"]} attach="background" /> {/* Make it gradient */}
         <ambientLight intensity={3} />
-        <Tree />
-        <OrbitControls />
+        {/* <Tree /> */}
+        <Ball />
+        <OrbitControls enableDamping />
       </Canvas>
+      <Items />
     </div>
   )
 }
