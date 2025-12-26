@@ -7,7 +7,7 @@ Source: https://sketchfab.com/3d-models/christmas-balls-06e4f260bbf64d2abeca609d
 Title: Christmas balls!
 */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function Ball(props) {
@@ -15,18 +15,9 @@ export function Ball(props) {
 
     useEffect(() => {
         // Arranging ornaments in an array with their segments
-        // console.log(/^Pallina/.test("Pallinaaaga"))
         const ornaments = Object.keys(nodes).filter(n => /^Pallina_nataliz[^_]*_\d+_\d+$/.test(n))
         let splittedOrnaments = ornaments.map((o) => o.split("_")).toSorted((a, b) => a[2] - b[2])
-        //_______________________________________________
-        // splittedOrnaments = splittedOrnaments.map((o) => {
-        //     if (o.length === 3) { // removes meshes that have only 3 elements(no index is there) (Replaced by Regex)
-        //         delete o.geometry[Object.keys(o.geometry)[0]]
-        //         return { "label": o.label, geometry: o.geometry }
-        //     } else return o
-        // })
-        // ______________________________________________
-        // console.log(splittedOrnaments)
+
         let structuredOrnaments = []
         splittedOrnaments.map((v, index) => {
             const prev = splittedOrnaments[index - 1]
@@ -40,9 +31,8 @@ export function Ball(props) {
                     structuredOrnaments.push([v.join("_")])
                 }
             }
+            return null
         })
-        // console.log(structuredOrnaments)
-
         // --------------------------
         // Putting material and giving a full ornaments
         let ornamentsObj = structuredOrnaments.map((o) => {
@@ -55,17 +45,129 @@ export function Ball(props) {
 
         // Now have to manually write materials..
 
-        console.log(ornamentsObj)
-    }, [])
+        // console.log(ornamentsObj)
+    }, [nodes])
 
+    const ornamentsList = useMemo(() => [
+        {
+            "label": "",
+            "geometry": {
+                "Pallina_natalizia_01_0": "Materiale_220",
+                "Pallina_natalizia_01_1": "Materiale_221"
+            }
+        },
+        {
+            "label": "",
+            "geometry": {
+                "Pallina_natalizia_02_0": "Materiale_220",
+                "Pallina_natalizia_02_1": "Materiale_226",
+                "Pallina_natalizia_02_2": "Materiale_231",
+                "Pallina_natalizia_02_3": "Materiale_221"
+            }
+        },
+        {
+            "label": "",
+            "geometry": {
+                "Pallina_natalizia_03_0": "Materiale_234",
+                "Pallina_natalizia_03_1": "Materiale_221"
+            }
+        },
+        {
+            "label": "",
+            "geometry": {
+                "Pallina_natalizia_04_0": "Materiale_228",
+                "Pallina_natalizia_04_1": "Materiale_227",
+                "Pallina_natalizia_04_2": "Materiale_229",
+                "Pallina_natalizia_04_3": "Materiale_224"
+            }
+        },
+        {
+            "label": "",
+            "geometry": {
+                "Pallina_natalizia_05_0": "Materiale_226",
+                "Pallina_natalizia_05_1": "Materiale_233",
+                "Pallina_natalizia_05_2": "Materiale_221"
+            }
+        },
+        {
+            "label": "",
+            "geometry": {
+                "Pallina_natalizia_06_0": "Materiale_223",
+                "Pallina_natalizia_06_1": "Materiale_224"
+            }
+        },
+        {
+            "label": "",
+            "geometry": {
+                "Pallina_natalizia_07_0": "Materiale_220",
+                "Pallina_natalizia_07_1": "Materiale_225",
+                "Pallina_natalizia_07_2": "Materiale_230",
+                "Pallina_natalizia_07_3": "Materiale_221"
+            }
+        },
+        {
+            "label": "",
+            "geometry": {
+                "Pallina_natalizia_08_0": "Materiale_238",
+                "Pallina_natalizia_08_1": "Materiale_221"
+            }
+        },
+        {
+            "label": "",
+            "geometry": {
+                "Pallina_natalizia_09_0": "Materiale_236",
+                "Pallina_natalizia_09_1": "Materiale_237"
+            }
+        },
+        {
+            "label": "",
+            "geometry": {
+                "Pallina_natalizia_10_0": "Materiale_235",
+                "Pallina_natalizia_10_1": "Materiale_224"
+            }
+        },
+        {
+            "label": "",
+            "geometry": {
+                "Pallina_natalizia_11_0": "Materiale_224"
+            }
+        },
+        {
+            "label": "",
+            "geometry": {
+                "Pallina_natalizzia_12_0": "Materiale_224",
+                "Pallina_natalizzia_12_1": "Materiale_229",
+                "Pallina_natalizzia_12_2": "Materiale_239",
+                "Pallina_natalizzia_12_3": "Materiale_240"
+            }
+        }
+    ], [])
+
+    useEffect(() => {
+        // console.log(ornamentsList)
+        // console.log(nodes[Object.keys(ornamentsList[0].geometry)[0]])
+        // console.log(ornamentsList[0].geometry[])
+    }, [ornamentsList, nodes])
+
+    /** for Pallina_natalizia_06
+     * <group position={[-0.006, -0.001, -0.098]} scale={0.015}>
+            <mesh geometry={nodes.Filo_intrecciato001_0.geometry} material={materials.Materiale_224} />
+            <mesh geometry={nodes.Filo_intrecciato001_1.geometry} material={materials.Materiale_232} />
+        </group>
+     */
 
     return (
         <group {...props} dispose={null}>
             <group scale={2} rotation={[-Math.PI / 2, 0, 0]}>
                 <group>
                     <group position={[-0.4, -0.081, -0.076]}>
-                        <mesh geometry={nodes.Pallina_natalizia_01_0.geometry} material={materials.Materiale_220} />
-                        <mesh geometry={nodes.Pallina_natalizia_01_1.geometry} material={materials.Materiale_221} />
+                        {/* <mesh geometry={nodes.Pallina_natalizia_01_0.geometry} material={materials.Materiale_220} />
+                        <mesh geometry={nodes.Pallina_natalizia_01_1.geometry} material={materials.Materiale_221} /> */}
+                        {Object.keys(ornamentsList[0].geometry).map((o, i) => {
+                            // console.log(nodes[o]["geometry"])
+                            // console.log(ornamentsList[0].geometry[o])
+                            return <mesh key={i} geometry={nodes[o]["geometry"]} material={materials[ornamentsList[0].geometry[o]]} />
+                        })}
                     </group>
                     <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} position={[-0.394, -0.08, 0.022]} />
                 </group>
@@ -76,14 +178,14 @@ export function Ball(props) {
                         <mesh geometry={nodes.Pallina_natalizia_02_2.geometry} material={materials.Materiale_231} />
                         <mesh geometry={nodes.Pallina_natalizia_02_3.geometry} material={materials.Materiale_221} />
                     </group>
-                    <mesh geometry={nodes.Gancetto_palline_natalizie_02_0.geometry} material={materials.Materiale_241} />
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
                 </group>
                 <group position={[-0.074, -0.08, 0.022]}>
                     <group position={[-0.006, 0, -0.098]}>
                         <mesh geometry={nodes.Pallina_natalizia_03_0.geometry} material={materials.Materiale_234} />
                         <mesh geometry={nodes.Pallina_natalizia_03_1.geometry} material={materials.Materiale_221} />
                     </group>
-                    <mesh geometry={nodes.Gancetto_palline_natalizie_03_0.geometry} material={materials.Materiale_241} />
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
                 </group>
                 <group position={[-0.394, 0.08, 0.022]}>
                     <group position={[-0.006, -0.001, -0.096]}>
@@ -92,7 +194,7 @@ export function Ball(props) {
                         <mesh geometry={nodes.Pallina_natalizia_04_2.geometry} material={materials.Materiale_229} />
                         <mesh geometry={nodes.Pallina_natalizia_04_3.geometry} material={materials.Materiale_224} />
                     </group>
-                    <mesh geometry={nodes.Gancetto_palline_natalizie_04_0.geometry} material={materials.Materiale_241} />
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
                 </group>
                 <group position={[-0.234, 0.08, 0.022]}>
                     <group position={[-0.006, -0.001, -0.098]} scale={[0.772, 0.772, 1]}>
@@ -100,32 +202,28 @@ export function Ball(props) {
                         <mesh geometry={nodes.Pallina_natalizia_05_1.geometry} material={materials.Materiale_233} />
                         <mesh geometry={nodes.Pallina_natalizia_05_2.geometry} material={materials.Materiale_221} />
                     </group>
-                    <mesh geometry={nodes.Gancetto_palline_natalizie_05_0.geometry} material={materials.Materiale_241} />
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
                 </group>
                 <group position={[-0.074, 0.08, 0.021]}>
-                    <group position={[-0.006, -0.001, -0.098]} scale={0.015}>
-                        <mesh geometry={nodes.Filo_intrecciato001_0.geometry} material={materials.Materiale_224} />
-                        <mesh geometry={nodes.Filo_intrecciato001_1.geometry} material={materials.Materiale_232} />
-                    </group>
                     <group position={[-0.006, -0.001, -0.097]}>
                         <mesh geometry={nodes.Pallina_natalizia_06_0.geometry} material={materials.Materiale_223} />
                         <mesh geometry={nodes.Pallina_natalizia_06_1.geometry} material={materials.Materiale_224} />
                     </group>
-                    <mesh geometry={nodes.Gancetto_palline_natalizie_06_0.geometry} material={materials.Materiale_241} />
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
                 </group>
                 <group position={[-0.074, 0.239, 0.022]}>
                     <group position={[-0.006, 0, -0.098]}>
                         <mesh geometry={nodes.Pallina_natalizia_09_0.geometry} material={materials.Materiale_236} />
                         <mesh geometry={nodes.Pallina_natalizia_09_1.geometry} material={materials.Materiale_237} />
                     </group>
-                    <mesh geometry={nodes.Gancetto_palline_natalizie_09_0.geometry} material={materials.Materiale_241} />
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
                 </group>
                 <group position={[-0.234, 0.239, 0.022]}>
                     <group position={[-0.006, 0, -0.098]}>
                         <mesh geometry={nodes.Pallina_natalizia_08_0.geometry} material={materials.Materiale_238} />
                         <mesh geometry={nodes.Pallina_natalizia_08_1.geometry} material={materials.Materiale_221} />
                     </group>
-                    <mesh geometry={nodes.Gancetto_palline_natalizie_08_0.geometry} material={materials.Materiale_241} />
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
                 </group>
                 <group position={[-0.394, 0.239, 0.022]}>
                     <group position={[-0.006, 0, -0.098]}>
@@ -134,18 +232,20 @@ export function Ball(props) {
                         <mesh geometry={nodes.Pallina_natalizia_07_2.geometry} material={materials.Materiale_230} />
                         <mesh geometry={nodes.Pallina_natalizia_07_3.geometry} material={materials.Materiale_221} />
                     </group>
-                    <mesh geometry={nodes.Gancetto_palline_natalizie_07_0.geometry} material={materials.Materiale_241} />
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
                 </group>
                 <group position={[-0.394, 0.401, 0.022]}>
                     <group position={[-0.006, -0.001, -0.098]}>
                         <mesh geometry={nodes.Pallina_natalizia_10_0.geometry} material={materials.Materiale_235} />
                         <mesh geometry={nodes.Pallina_natalizia_10_1.geometry} material={materials.Materiale_224} />
                     </group>
-                    <mesh geometry={nodes.Gancetto_palline_natalizie_10_0.geometry} material={materials.Materiale_241} />
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
                 </group>
                 <group position={[-0.234, 0.401, 0.022]}>
-                    <mesh geometry={nodes.Gancetto_palline_natalizie_11_0.geometry} material={materials.Materiale_241} />
-                    <mesh geometry={nodes.Pallina_natalizia_11_0.geometry} material={materials.Materiale_224} position={[-0.006, -0.001, -0.098]} />
+                    <group position={[-0.006, -0.001, -0.098]}>
+                        <mesh geometry={nodes.Pallina_natalizia_11_0.geometry} material={materials.Materiale_224} />
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
                 </group>
                 <group position={[-0.074, 0.401, 0.022]}>
                     <group position={[-0.006, -0.001, -0.022]}>
@@ -154,7 +254,8 @@ export function Ball(props) {
                         <mesh geometry={nodes.Pallina_natalizzia_12_2.geometry} material={materials.Materiale_239} />
                         <mesh geometry={nodes.Pallina_natalizzia_12_3.geometry} material={materials.Materiale_240} />
                     </group>
-                    <mesh geometry={nodes.Gancetto_palline_natalizie_12_0.geometry} material={materials.Materiale_241} />
+                    {/* <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} /> */}
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
                 </group>
             </group>
         </group>
