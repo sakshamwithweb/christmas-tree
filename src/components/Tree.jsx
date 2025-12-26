@@ -10,7 +10,7 @@ Title: Pine Tree 2
 import React from 'react'
 import { useGLTF } from '@react-three/drei'
 
-export function Tree(props) {
+export const Tree = (props) => {
   const { nodes, materials } = useGLTF('/tree1.glb')
   return (
     <group scale={0.3} position={[0,-1.5,0]} {...props} dispose={null}>

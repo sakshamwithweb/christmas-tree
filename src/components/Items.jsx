@@ -1,38 +1,44 @@
 import { MoveLeft, MoveRight } from 'lucide-react'
 import React from 'react'
 
-const Items = () => {
+export const Items = () => {
     const items = [
         {
             img: "/ball.png",
-            label: "A new ball"
+            label: "A new ball",
+            model:<></>
         },
         {
             img: "/ball.png",
-            label: "A recent ball"
+            label: "A recent ball",
+            model:<></>
         },
         {
             img: "/ball.png",
-            label: "A mysterious ball"
+            label: "A mysterious ball",
+            model:<></>
         },
         {
             img: "/ball.png",
-            label: "A chocolate ball"
+            label: "A chocolate ball",
+            model:<></>
         },
         {
             img: "/ball.png",
-            label: "A favourite ball"
+            label: "A favourite ball",
+            model:<></>
         },
         {
             img: "/ball.png",
-            label: "A edible ball"
+            label: "A edible ball",
+            model:<></>
         }
     ]
 
     return (
-        <div className='z-10 fixed bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-4 my-4 w-[50vw]'>
+        <div className='z-10 fixed bottom-10 pointer-events-none left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-4 my-4 w-[50vw]'>
             <div className='text-xl'>Drag & drop items onto your Christmas Tree!</div>
-            <div className='flex w-full justify-between items-center'>
+            <div className='flex w-full justify-between items-center pointer-events-auto'>
                 <button className=''><MoveLeft /></button>
 
                 {items.map((item, index) => {
@@ -47,5 +53,3 @@ const Items = () => {
         </div>
     )
 }
-
-export default Items

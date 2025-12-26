@@ -7,17 +7,67 @@ Source: https://sketchfab.com/3d-models/christmas-balls-06e4f260bbf64d2abeca609d
 Title: Christmas balls!
 */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function Ball(props) {
     const { nodes, materials } = useGLTF('/christmas_balls.glb')
+
+    useEffect(() => {
+        // Arranging ornaments in an array with their segments
+        // console.log(/^Pallina/.test("Pallinaaaga"))
+        const ornaments = Object.keys(nodes).filter(n => /^Pallina_nataliz[^_]*_\d+_\d+$/.test(n))
+        let splittedOrnaments = ornaments.map((o) => o.split("_")).toSorted((a, b) => a[2] - b[2])
+        //_______________________________________________
+        // splittedOrnaments = splittedOrnaments.map((o) => {
+        //     if (o.length === 3) { // removes meshes that have only 3 elements(no index is there) (Replaced by Regex)
+        //         delete o.geometry[Object.keys(o.geometry)[0]]
+        //         return { "label": o.label, geometry: o.geometry }
+        //     } else return o
+        // })
+        // ______________________________________________
+        // console.log(splittedOrnaments)
+        let structuredOrnaments = []
+        splittedOrnaments.map((v, index) => {
+            const prev = splittedOrnaments[index - 1]
+            if (!prev) { // first time
+                structuredOrnaments.push([v.join("_")])
+            } else {
+                if ((prev[0] && prev[1] && prev[2]) && (prev[0] === v[0] && prev[1] === v[1] && prev[2] === v[2])) { // Put in same list
+                    let currentStructuredOrnament = structuredOrnaments[parseInt(v[2]) - 1]
+                    currentStructuredOrnament.push(v.join("_"))
+                } else {
+                    structuredOrnaments.push([v.join("_")])
+                }
+            }
+        })
+        // console.log(structuredOrnaments)
+
+        // --------------------------
+        // Putting material and giving a full ornaments
+        let ornamentsObj = structuredOrnaments.map((o) => {
+            const geometryObj = {}
+            for (let i = 0; i < o.length; i++) {
+                geometryObj[o[i]] = "Materiale_2xx"
+            }
+            return { label: "", geometry: geometryObj }
+        })
+
+        // Now have to manually write materials..
+
+        console.log(ornamentsObj)
+    }, [])
+
+
     return (
         <group {...props} dispose={null}>
             <group scale={2} rotation={[-Math.PI / 2, 0, 0]}>
-                <group position={[-0.4, -0.081, -0.076]}>
-                    <mesh geometry={nodes.Pallina_natalizia_01_0.geometry} material={materials.Materiale_220} />
-                    <mesh geometry={nodes.Pallina_natalizia_01_1.geometry} material={materials.Materiale_221} />
+                <group>
+                    <group position={[-0.4, -0.081, -0.076]}>
+                        <mesh geometry={nodes.Pallina_natalizia_01_0.geometry} material={materials.Materiale_220} />
+                        <mesh geometry={nodes.Pallina_natalizia_01_1.geometry} material={materials.Materiale_221} />
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} position={[-0.394, -0.08, 0.022]} />
                 </group>
                 <group position={[-0.234, -0.08, 0.022]}>
                     <group position={[-0.006, 0, -0.098]}>
@@ -106,7 +156,6 @@ export function Ball(props) {
                     </group>
                     <mesh geometry={nodes.Gancetto_palline_natalizie_12_0.geometry} material={materials.Materiale_241} />
                 </group>
-                <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} position={[-0.394, -0.08, 0.022]} />
             </group>
         </group>
     )
