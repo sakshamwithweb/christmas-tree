@@ -3,7 +3,8 @@ import { Canvas } from '@react-three/fiber'
 import React, { useMemo, useState } from 'react'
 import Navbar from './components/Navbar'
 import { Items } from './components/Items'
-import { Ball } from './components/Balls.'
+import { Ball } from './components/Balls'
+import { BallImg } from './components/BallImg'
 
 const App = () => {
   const [present, setPresent] = useState(false)
@@ -106,15 +107,16 @@ const App = () => {
   return (
     <div className='w-screen h-screen'>
       <Navbar present={present} setPresent={setPresent} />
-      <Canvas>
-        <color args={["#626F70"]} attach="background" />
+      <Canvas gl={{ preserveDrawingBuffer: true }}>
+        <color args={["white"]} attach="background" />
         <ambientLight intensity={3} />
         <pointLight position={[-10, 0, 0]} decay={0} intensity={5} />
         <pointLight position={[10, 0, 0]} decay={0} intensity={5} />
         {/* <Tree /> */}
-        <Ball ornamentsList={ornamentsList} position={[0.48, 0.15, 0.31]} />
+        {/* <Ball ornamentsList={ornamentsList} position={[0.48, 0.15, 0.31]} /> */}
+        <BallImg ornamentsList={ornamentsList} />
         <OrbitControls enableDamping />
-        <gridHelper />
+        {/* <gridHelper /> */}
       </Canvas>
       <Items ornamentsList={ornamentsList} />
     </div>
