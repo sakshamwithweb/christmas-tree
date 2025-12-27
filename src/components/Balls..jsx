@@ -7,10 +7,10 @@ Source: https://sketchfab.com/3d-models/christmas-balls-06e4f260bbf64d2abeca609d
 Title: Christmas balls!
 */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
 
-export function Ball(props) {
+export function Ball({ position, ornamentsList }) {
     const { nodes, materials } = useGLTF('/christmas_balls.glb')
 
     useEffect(() => {
@@ -45,109 +45,9 @@ export function Ball(props) {
 
         // Now have to manually write materials..
 
-        // console.log(ornamentsObj)
+        console.log(ornamentsObj)
     }, [nodes])
 
-    const ornamentsList = useMemo(() => [
-        {
-            "label": "",
-            "geometry": {
-                "Pallina_natalizia_01_0": "Materiale_220",
-                "Pallina_natalizia_01_1": "Materiale_221"
-            }
-        },
-        {
-            "label": "",
-            "geometry": {
-                "Pallina_natalizia_02_0": "Materiale_220",
-                "Pallina_natalizia_02_1": "Materiale_226",
-                "Pallina_natalizia_02_2": "Materiale_231",
-                "Pallina_natalizia_02_3": "Materiale_221"
-            }
-        },
-        {
-            "label": "",
-            "geometry": {
-                "Pallina_natalizia_03_0": "Materiale_234",
-                "Pallina_natalizia_03_1": "Materiale_221"
-            }
-        },
-        {
-            "label": "",
-            "geometry": {
-                "Pallina_natalizia_04_0": "Materiale_228",
-                "Pallina_natalizia_04_1": "Materiale_227",
-                "Pallina_natalizia_04_2": "Materiale_229",
-                "Pallina_natalizia_04_3": "Materiale_224"
-            }
-        },
-        {
-            "label": "",
-            "geometry": {
-                "Pallina_natalizia_05_0": "Materiale_226",
-                "Pallina_natalizia_05_1": "Materiale_233",
-                "Pallina_natalizia_05_2": "Materiale_221"
-            }
-        },
-        {
-            "label": "",
-            "geometry": {
-                "Pallina_natalizia_06_0": "Materiale_223",
-                "Pallina_natalizia_06_1": "Materiale_224"
-            }
-        },
-        {
-            "label": "",
-            "geometry": {
-                "Pallina_natalizia_07_0": "Materiale_220",
-                "Pallina_natalizia_07_1": "Materiale_225",
-                "Pallina_natalizia_07_2": "Materiale_230",
-                "Pallina_natalizia_07_3": "Materiale_221"
-            }
-        },
-        {
-            "label": "",
-            "geometry": {
-                "Pallina_natalizia_08_0": "Materiale_238",
-                "Pallina_natalizia_08_1": "Materiale_221"
-            }
-        },
-        {
-            "label": "",
-            "geometry": {
-                "Pallina_natalizia_09_0": "Materiale_236",
-                "Pallina_natalizia_09_1": "Materiale_237"
-            }
-        },
-        {
-            "label": "",
-            "geometry": {
-                "Pallina_natalizia_10_0": "Materiale_235",
-                "Pallina_natalizia_10_1": "Materiale_224"
-            }
-        },
-        {
-            "label": "",
-            "geometry": {
-                "Pallina_natalizia_11_0": "Materiale_224"
-            }
-        },
-        {
-            "label": "",
-            "geometry": {
-                "Pallina_natalizzia_12_0": "Materiale_224",
-                "Pallina_natalizzia_12_1": "Materiale_229",
-                "Pallina_natalizzia_12_2": "Materiale_239",
-                "Pallina_natalizzia_12_3": "Materiale_240"
-            }
-        }
-    ], [])
-
-    useEffect(() => {
-        // console.log(ornamentsList)
-        // console.log(nodes[Object.keys(ornamentsList[0].geometry)[0]])
-        // console.log(ornamentsList[0].geometry[])
-    }, [ornamentsList, nodes])
 
     /** for Pallina_natalizia_06
      * <group position={[-0.006, -0.001, -0.098]} scale={0.015}>
@@ -157,15 +57,11 @@ export function Ball(props) {
      */
 
     return (
-        <group {...props} dispose={null}>
+        <group position={position} dispose={null}>
             <group scale={2} rotation={[-Math.PI / 2, 0, 0]}>
                 <group>
                     <group position={[-0.4, -0.081, -0.076]}>
-                        {/* <mesh geometry={nodes.Pallina_natalizia_01_0.geometry} material={materials.Materiale_220} />
-                        <mesh geometry={nodes.Pallina_natalizia_01_1.geometry} material={materials.Materiale_221} /> */}
                         {Object.keys(ornamentsList[0].geometry).map((o, i) => {
-                            // console.log(nodes[o]["geometry"])
-                            // console.log(ornamentsList[0].geometry[o])
                             return <mesh key={i} geometry={nodes[o]["geometry"]} material={materials[ornamentsList[0].geometry[o]]} />
                         })}
                     </group>
@@ -254,7 +150,6 @@ export function Ball(props) {
                         <mesh geometry={nodes.Pallina_natalizzia_12_2.geometry} material={materials.Materiale_239} />
                         <mesh geometry={nodes.Pallina_natalizzia_12_3.geometry} material={materials.Materiale_240} />
                     </group>
-                    {/* <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} /> */}
                     <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
                 </group>
             </group>
