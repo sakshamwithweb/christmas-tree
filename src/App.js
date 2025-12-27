@@ -4,11 +4,13 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Navbar from './components/Navbar'
 import { Items } from './components/Items'
 import { BallImg } from './components/BallImg'
+import { Balls } from './components/Balls'
 
 const App = () => {
   const [present, setPresent] = useState(false)
   const images = useRef([])
   const [areImgAvailable, setAreImgAvailable] = useState(false)
+  const [loadedOrnaments, setLoadedOrnaments] = useState([])
 
   useEffect(() => {
     setInterval(() => {
@@ -16,6 +18,10 @@ const App = () => {
     }, 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const loadOrnament = (ornament) => {
+    setLoadedOrnaments([...loadedOrnaments, ornament])
+  }
 
   const ornamentsList = useMemo(() => [ // Got from Balls.jsx
     {
@@ -115,18 +121,23 @@ const App = () => {
   return (
     <div className='w-screen h-screen'>
       <Navbar present={present} setPresent={setPresent} />
+
       <Canvas gl={{ preserveDrawingBuffer: true }}>
         <color args={["gray"]} attach="background" />
-        <ambientLight intensity={3} />
-        <pointLight position={[-10, 0, 0]} decay={0} intensity={5} />
-        <pointLight position={[10, 0, 0]} decay={0} intensity={5} />
-        {/* <Tree /> */}
-        {/* <Ball ornamentsList={ornamentsList} position={[0.48, 0.15, 0.31]} /> */}
-        {!areImgAvailable && < BallImg images={images} ornamentsList={ornamentsList} />}
+
+        <group> {/* Lights */}
+          <ambientLight intensity={3} />
+          <pointLight position={[-10, 0, 0]} decay={0} intensity={5} />
+          <pointLight position={[10, 0, 0]} decay={0} intensity={5} />
+        </group>
+
+        {!areImgAvailable ? <BallImg images={images} ornamentsList={ornamentsList} /> : <></>} {/* <Tree /> */}
+
+        <Balls loadedOrnaments={loadedOrnaments} />
+
         <OrbitControls enableDamping />
-        {/* <gridHelper /> */}
       </Canvas>
-      <Items areImgAvailable={areImgAvailable} images={images} ornamentsList={ornamentsList} />
+      <Items loadOrnament={loadOrnament} areImgAvailable={areImgAvailable} images={images} ornamentsList={ornamentsList} />
     </div>
   )
 }

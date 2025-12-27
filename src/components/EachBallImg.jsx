@@ -20,14 +20,12 @@ export function EachBallImg({ i, nodes, materials, o, images }) {
 
     return (
         <group position={[i - 5, 0, 0]} scale={2} rotation={[-Math.PI / 2, 0, 0]}>
-            <group>
-                <group {...(o.label === "Snowspin" && { position: [0, 0, 0.075] })}> {/* {Pushing snowspin up as its position was wrong} */}
-                    {Object.keys(o.geometry).map((mesh, index) => {
-                        return <mesh key={index} geometry={nodes[mesh]["geometry"]} material={materials[o.geometry[mesh]]} />
-                    })}
-                </group>
-                <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} position={[0.005, 0, 0.093]} />
+            <group {...(o.label === "Snowspin" && { position: [0, 0, 0.075] })}> {/* {Pushing snowspin up as its position was wrong} */}
+                {Object.keys(o.geometry).map((mesh, index) => {
+                    return <mesh key={index} geometry={nodes[mesh]["geometry"]} material={materials[o.geometry[mesh]]} />
+                })}
             </group>
+            <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} position={[0.005, 0, 0.093]} />
         </group>
     )
 }

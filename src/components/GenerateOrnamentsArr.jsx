@@ -1,0 +1,143 @@
+import React, { useEffect } from 'react'
+import { useGLTF } from '@react-three/drei'
+
+export function Ball({ position, ornamentsList }) {
+    const { nodes, materials } = useGLTF('/christmas_balls.glb')
+
+    useEffect(() => {
+        // Arranging ornaments in an array with their segments
+        const ornaments = Object.keys(nodes).filter(n => /^Pallina_nataliz[^_]*_\d+_\d+$/.test(n))
+        let splittedOrnaments = ornaments.map((o) => o.split("_")).toSorted((a, b) => a[2] - b[2])
+
+        let structuredOrnaments = []
+        splittedOrnaments.map((v, index) => {
+            const prev = splittedOrnaments[index - 1]
+            if (!prev) { // first time
+                structuredOrnaments.push([v.join("_")])
+            } else {
+                if ((prev[0] && prev[1] && prev[2]) && (prev[0] === v[0] && prev[1] === v[1] && prev[2] === v[2])) { // Put in same list
+                    let currentStructuredOrnament = structuredOrnaments[parseInt(v[2]) - 1]
+                    currentStructuredOrnament.push(v.join("_"))
+                } else {
+                    structuredOrnaments.push([v.join("_")])
+                }
+            }
+            return null
+        })
+        // --------------------------
+        // Putting material and giving a full ornaments
+        let ornamentsObj = structuredOrnaments.map((o) => {
+            const geometryObj = {}
+            for (let i = 0; i < o.length; i++) {
+                geometryObj[o[i]] = "Materiale_2xx"
+            }
+            return { label: "", geometry: geometryObj }
+        })
+
+        // Now have to manually write materials..
+
+        console.log(ornamentsObj)
+    }, [nodes])
+
+    return (
+        <group position={position} dispose={null}>
+            <group scale={2} rotation={[-Math.PI / 2, 0, 0]}>
+                <group>
+                    <group position={[-0.4, -0.081, -0.076]}>
+                        {Object.keys(ornamentsList[0].geometry).map((o, i) => {
+                            return <mesh key={i} geometry={nodes[o]["geometry"]} material={materials[ornamentsList[0].geometry[o]]} />
+                        })}
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} position={[-0.394, -0.08, 0.022]} />
+                </group>
+                <group position={[-0.234, -0.08, 0.022]}>
+                    <group position={[-0.006, 0, -0.098]}>
+                        <mesh geometry={nodes.Pallina_natalizia_02_0.geometry} material={materials.Materiale_220} />
+                        <mesh geometry={nodes.Pallina_natalizia_02_1.geometry} material={materials.Materiale_226} />
+                        <mesh geometry={nodes.Pallina_natalizia_02_2.geometry} material={materials.Materiale_231} />
+                        <mesh geometry={nodes.Pallina_natalizia_02_3.geometry} material={materials.Materiale_221} />
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
+                </group>
+                <group position={[-0.074, -0.08, 0.022]}>
+                    <group position={[-0.006, 0, -0.098]}>
+                        <mesh geometry={nodes.Pallina_natalizia_03_0.geometry} material={materials.Materiale_234} />
+                        <mesh geometry={nodes.Pallina_natalizia_03_1.geometry} material={materials.Materiale_221} />
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
+                </group>
+                <group position={[-0.394, 0.08, 0.022]}>
+                    <group position={[-0.006, -0.001, -0.096]}>
+                        <mesh geometry={nodes.Pallina_natalizia_04_0.geometry} material={materials.Materiale_228} />
+                        <mesh geometry={nodes.Pallina_natalizia_04_1.geometry} material={materials.Materiale_227} />
+                        <mesh geometry={nodes.Pallina_natalizia_04_2.geometry} material={materials.Materiale_229} />
+                        <mesh geometry={nodes.Pallina_natalizia_04_3.geometry} material={materials.Materiale_224} />
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
+                </group>
+                <group position={[-0.234, 0.08, 0.022]}>
+                    <group position={[-0.006, -0.001, -0.098]} scale={[0.772, 0.772, 1]}>
+                        <mesh geometry={nodes.Pallina_natalizia_05_0.geometry} material={materials.Materiale_226} />
+                        <mesh geometry={nodes.Pallina_natalizia_05_1.geometry} material={materials.Materiale_233} />
+                        <mesh geometry={nodes.Pallina_natalizia_05_2.geometry} material={materials.Materiale_221} />
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
+                </group>
+                <group position={[-0.074, 0.08, 0.021]}>
+                    <group position={[-0.006, -0.001, -0.097]}>
+                        <mesh geometry={nodes.Pallina_natalizia_06_0.geometry} material={materials.Materiale_223} />
+                        <mesh geometry={nodes.Pallina_natalizia_06_1.geometry} material={materials.Materiale_224} />
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
+                </group>
+                <group position={[-0.074, 0.239, 0.022]}>
+                    <group position={[-0.006, 0, -0.098]}>
+                        <mesh geometry={nodes.Pallina_natalizia_09_0.geometry} material={materials.Materiale_236} />
+                        <mesh geometry={nodes.Pallina_natalizia_09_1.geometry} material={materials.Materiale_237} />
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
+                </group>
+                <group position={[-0.234, 0.239, 0.022]}>
+                    <group position={[-0.006, 0, -0.098]}>
+                        <mesh geometry={nodes.Pallina_natalizia_08_0.geometry} material={materials.Materiale_238} />
+                        <mesh geometry={nodes.Pallina_natalizia_08_1.geometry} material={materials.Materiale_221} />
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
+                </group>
+                <group position={[-0.394, 0.239, 0.022]}>
+                    <group position={[-0.006, 0, -0.098]}>
+                        <mesh geometry={nodes.Pallina_natalizia_07_0.geometry} material={materials.Materiale_220} />
+                        <mesh geometry={nodes.Pallina_natalizia_07_1.geometry} material={materials.Materiale_225} />
+                        <mesh geometry={nodes.Pallina_natalizia_07_2.geometry} material={materials.Materiale_230} />
+                        <mesh geometry={nodes.Pallina_natalizia_07_3.geometry} material={materials.Materiale_221} />
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
+                </group>
+                <group position={[-0.394, 0.401, 0.022]}>
+                    <group position={[-0.006, -0.001, -0.098]}>
+                        <mesh geometry={nodes.Pallina_natalizia_10_0.geometry} material={materials.Materiale_235} />
+                        <mesh geometry={nodes.Pallina_natalizia_10_1.geometry} material={materials.Materiale_224} />
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
+                </group>
+                <group position={[-0.234, 0.401, 0.022]}>
+                    <group position={[-0.006, -0.001, -0.098]}>
+                        <mesh geometry={nodes.Pallina_natalizia_11_0.geometry} material={materials.Materiale_224} />
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
+                </group>
+                <group position={[-0.074, 0.401, 0.022]}>
+                    <group position={[-0.006, -0.001, -0.022]}>
+                        <mesh geometry={nodes.Pallina_natalizzia_12_0.geometry} material={materials.Materiale_224} />
+                        <mesh geometry={nodes.Pallina_natalizzia_12_1.geometry} material={materials.Materiale_229} />
+                        <mesh geometry={nodes.Pallina_natalizzia_12_2.geometry} material={materials.Materiale_239} />
+                        <mesh geometry={nodes.Pallina_natalizzia_12_3.geometry} material={materials.Materiale_240} />
+                    </group>
+                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} />
+                </group>
+            </group>
+        </group>
+    )
+}
+
+useGLTF.preload('/christmas_balls.glb')

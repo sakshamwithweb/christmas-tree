@@ -1,7 +1,7 @@
 import { MoveLeft, MoveRight } from 'lucide-react'
 import React, { useState } from 'react'
 
-export const Items = ({ ornamentsList, images, areImgAvailable }) => {
+export const Items = ({ ornamentsList, images, areImgAvailable, loadOrnament }) => {
     const [visibleOrnaments, setVisibleOrnmanets] = useState((new Array(5).fill()).map((_, i) => i))
 
     const moveSlider = (option) => { // "right"/"left"
@@ -21,7 +21,7 @@ export const Items = ({ ornamentsList, images, areImgAvailable }) => {
                 <button className='pointer-events-auto' onClick={() => moveSlider("left")}><MoveLeft /></button>
                 <div className='flex pointer-events-auto w-[80%] justify-between items-center'>
                     {ornamentsList.map((item, index) => {
-                        return <div className={`${visibleOrnaments.includes(index) ? "" : "hidden"} h-16 w-16 cursor-grab transition-transform hover:scale-110 duration-300`} key={index}>
+                        return <div onClick={() => loadOrnament(item)} className={`${visibleOrnaments.includes(index) ? "" : "hidden"} h-16 w-16 cursor-grab transition-transform hover:scale-110 duration-300`} key={index}>
                             {areImgAvailable && <div><img src={images.current[index]} alt={item.label} /></div>}
                             <div className='text-sm'>{item.label}</div>
                         </div>
