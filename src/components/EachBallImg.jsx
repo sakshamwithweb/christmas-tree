@@ -15,6 +15,7 @@ export function EachBallImg({ i, nodes, materials, o, images }) {
         const screenshot = gl.domElement.toDataURL()
         images.current.push(screenshot)
         gl.setPixelRatio(window.devicePixelRatio)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

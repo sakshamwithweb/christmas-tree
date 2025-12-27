@@ -1,9 +1,8 @@
 import { OrbitControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import Navbar from './components/Navbar'
 import { Items } from './components/Items'
-import { Ball } from './components/Balls'
 import { BallImg } from './components/BallImg'
 
 const App = () => {
@@ -109,7 +108,7 @@ const App = () => {
     <div className='w-screen h-screen'>
       <Navbar present={present} setPresent={setPresent} />
       <Canvas gl={{ preserveDrawingBuffer: true }}>
-        <color args={["white"]} attach="background" />
+        <color args={["gray"]} attach="background" />
         <ambientLight intensity={3} />
         <pointLight position={[-10, 0, 0]} decay={0} intensity={5} />
         <pointLight position={[10, 0, 0]} decay={0} intensity={5} />
