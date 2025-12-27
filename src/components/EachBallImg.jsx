@@ -3,7 +3,7 @@ import { useGLTF } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { PerspectiveCamera, Vector3 } from 'three'
 
-export function EachBallImg({ i, nodes, materials, o }) {
+export function EachBallImg({ i, nodes, materials, o, images }) {
     const { gl, scene } = useThree()
 
     useEffect(() => {
@@ -13,7 +13,7 @@ export function EachBallImg({ i, nodes, materials, o }) {
         camera.lookAt(new Vector3(i - 5, 0.05, 0))
         gl.render(scene, camera)
         const screenshot = gl.domElement.toDataURL()
-        console.log(screenshot)
+        images.current.push(screenshot)
         gl.setPixelRatio(window.devicePixelRatio)
     }, [])
 

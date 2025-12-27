@@ -1,6 +1,6 @@
 import { OrbitControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Navbar from './components/Navbar'
 import { Items } from './components/Items'
 import { Ball } from './components/Balls'
@@ -8,7 +8,7 @@ import { BallImg } from './components/BallImg'
 
 const App = () => {
   const [present, setPresent] = useState(false)
-  const [images, setImages] = useState([])
+  const images = useRef([])
 
   const ornamentsList = useMemo(() => [ // Got from Balls.jsx
     {
@@ -115,11 +115,11 @@ const App = () => {
         <pointLight position={[10, 0, 0]} decay={0} intensity={5} />
         {/* <Tree /> */}
         {/* <Ball ornamentsList={ornamentsList} position={[0.48, 0.15, 0.31]} /> */}
-        <BallImg ornamentsList={ornamentsList} />
+        <BallImg images={images} ornamentsList={ornamentsList} />
         <OrbitControls enableDamping />
         {/* <gridHelper /> */}
       </Canvas>
-      <Items ornamentsList={ornamentsList} />
+      <Items images={images} ornamentsList={ornamentsList} />
     </div>
   )
 }
