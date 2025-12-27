@@ -1,24 +1,24 @@
 import React, { useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
-import { PerspectiveCamera } from 'three'
+import { PerspectiveCamera, Vector3 } from 'three'
 
-export function EachBallImg({ nodes, materials, o }) {
+export function EachBallImg({ i, nodes, materials, o }) {
     const { gl, scene } = useThree()
 
     useEffect(() => {
         gl.setPixelRatio(window.devicePixelRatio * 0.5)
         const camera = new PerspectiveCamera(20, 1.4, 0.1, 100)
-        camera.position.setZ(1)
-        camera.position.setY(0.05)
+        camera.position.set(i - 5, 0.05, 1)
+        camera.lookAt(new Vector3(i - 5, 0.05, 0))
         gl.render(scene, camera)
         const screenshot = gl.domElement.toDataURL()
-        gl.setPixelRatio(window.devicePixelRatio)
         console.log(screenshot)
-    }, [gl, scene])
+        gl.setPixelRatio(window.devicePixelRatio)
+    }, [])
 
     return (
-        <group scale={2} rotation={[-Math.PI / 2, 0, 0]}>
+        <group position={[i - 5, 0, 0]} scale={2} rotation={[-Math.PI / 2, 0, 0]}>
             <group>
                 <group {...(o.label === "Snowspin" && { position: [0, 0, 0.075] })}> {/* {Pushing snowspin up as its position was wrong} */}
                     {Object.keys(o.geometry).map((mesh, index) => {

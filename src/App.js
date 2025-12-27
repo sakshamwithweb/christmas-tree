@@ -8,6 +8,7 @@ import { BallImg } from './components/BallImg'
 
 const App = () => {
   const [present, setPresent] = useState(false)
+  const [images, setImages] = useState([])
 
   const ornamentsList = useMemo(() => [ // Got from Balls.jsx
     {
