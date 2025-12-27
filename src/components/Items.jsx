@@ -1,9 +1,8 @@
 import { MoveLeft, MoveRight } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
-export const Items = ({ ornamentsList, images }) => {
+export const Items = ({ ornamentsList, images, areImgAvailable }) => {
     const [visibleOrnaments, setVisibleOrnmanets] = useState((new Array(5).fill()).map((_, i) => i))
-    const [areImgAvailable, setAreImgAvailable] = useState(false)
 
     const moveSlider = (option) => { // "right"/"left"
         if (option === "right") {
@@ -14,12 +13,6 @@ export const Items = ({ ornamentsList, images }) => {
             setVisibleOrnmanets([newFirstEle, ...visibleOrnaments.slice(0, visibleOrnaments.length - 1)])
         }
     }
-
-    useEffect(() => {
-        setInterval(() => {
-            if (images.current.length === ornamentsList.length) setAreImgAvailable(true)
-        }, 500);
-    }, [])
 
     return (
         <div className='z-10 fixed bottom-10 pointer-events-none left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-4 my-4 w-[50vw]'>

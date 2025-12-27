@@ -1,6 +1,6 @@
 import { OrbitControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Navbar from './components/Navbar'
 import { Items } from './components/Items'
 import { BallImg } from './components/BallImg'
@@ -8,6 +8,14 @@ import { BallImg } from './components/BallImg'
 const App = () => {
   const [present, setPresent] = useState(false)
   const images = useRef([])
+  const [areImgAvailable, setAreImgAvailable] = useState(false)
+
+  useEffect(() => {
+    setInterval(() => {
+      if (images.current.length === ornamentsList.length) setAreImgAvailable(true)
+    }, 500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const ornamentsList = useMemo(() => [ // Got from Balls.jsx
     {
@@ -114,11 +122,11 @@ const App = () => {
         <pointLight position={[10, 0, 0]} decay={0} intensity={5} />
         {/* <Tree /> */}
         {/* <Ball ornamentsList={ornamentsList} position={[0.48, 0.15, 0.31]} /> */}
-        <BallImg images={images} ornamentsList={ornamentsList} />
+        {!areImgAvailable && < BallImg images={images} ornamentsList={ornamentsList} />}
         <OrbitControls enableDamping />
         {/* <gridHelper /> */}
       </Canvas>
-      <Items images={images} ornamentsList={ornamentsList} />
+      <Items areImgAvailable={areImgAvailable} images={images} ornamentsList={ornamentsList} />
     </div>
   )
 }
