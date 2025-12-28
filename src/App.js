@@ -11,8 +11,9 @@ const App = () => {
   const images = useRef([])
   const [areImgAvailable, setAreImgAvailable] = useState(false)
   const [loadedOrnaments, setLoadedOrnaments] = useState([])
+  const raycaster = useRef()
 
-  useEffect(() => {
+  useEffect(() => { /* Checking are images available */
     setInterval(() => {
       if (images.current.length === ornamentsList.length) setAreImgAvailable(true)
     }, 500);
@@ -133,7 +134,9 @@ const App = () => {
 
         {!areImgAvailable ? <BallImg images={images} ornamentsList={ornamentsList} /> : <></>} {/* <Tree /> */}
 
-        <Balls loadedOrnaments={loadedOrnaments} />
+        <Balls raycaster={raycaster} loadedOrnaments={loadedOrnaments} />
+
+        <raycaster ref={raycaster} />
 
         <OrbitControls enableDamping />
       </Canvas>
