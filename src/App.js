@@ -10,7 +10,7 @@ const App = () => {
   const [present, setPresent] = useState(false)
   const images = useRef([])
   const [areImgAvailable, setAreImgAvailable] = useState(false)
-  const [loadedOrnaments, setLoadedOrnaments] = useState([])
+  const [loadOrnaments, setLoadOrnaments] = useState([])
   const raycaster = useRef()
 
   useEffect(() => { /* Checking are images available */
@@ -21,7 +21,7 @@ const App = () => {
   }, [])
 
   const loadOrnament = (ornament) => {
-    setLoadedOrnaments([...loadedOrnaments, ornament])
+    setLoadOrnaments([...loadOrnaments, { ornament: ornament, loaded: false, uid: Math.floor(Math.random() * 10000) }])
   }
 
   const ornamentsList = useMemo(() => [ // Got from Balls.jsx
@@ -134,7 +134,7 @@ const App = () => {
 
         {!areImgAvailable ? <BallImg images={images} ornamentsList={ornamentsList} /> : <></>} {/* <Tree /> */}
 
-        <Balls raycaster={raycaster} loadedOrnaments={loadedOrnaments} />
+        <Balls setLoadOrnaments={setLoadOrnaments} raycaster={raycaster} loadOrnaments={loadOrnaments} />
 
         <raycaster ref={raycaster} />
 

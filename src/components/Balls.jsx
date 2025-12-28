@@ -1,18 +1,31 @@
 import React, { useEffect, useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
-import { Color, Vector2 } from 'three'
+import { Vector2 } from 'three'
 import { useThree } from '@react-three/fiber'
 
-export function Balls({ loadedOrnaments, raycaster }) {
+
+const GenerateOrnament = ({ o, nodes, materials, reference }) => {
+    return <object3D {...(reference && { ref: reference })} name={o.ornament.label} rotation={[-Math.PI / 2, 0, 0]} scale={2}>
+        <object3D {...(o.ornament.label === "Snowspin" && { position: [0, 0, 0.075] })}>{ /* Pushing snowspin up as its position was wrong*/}
+            {Object.keys(o.ornament.geometry).map((mesh, index) => {
+                return <mesh key={index} geometry={nodes[mesh]["geometry"]} material={materials[o.ornament.geometry[mesh]]} />
+            })}
+        </object3D>
+        <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} position={[0.005, 0, 0.093]} />
+    </object3D>
+}
+
+export function Balls({ loadOrnaments, raycaster, setLoadOrnaments }) {
     const { nodes, materials } = useGLTF('/christmas_balls.glb')
     const { gl, camera } = useThree()
-    const ballsRef = useRef()
+    const parentRef = useRef()
+    const ballsRef = useRef([])
 
     useEffect(() => {
-        if (loadedOrnaments.length > 0) {
-            console.log(loadedOrnaments)
+        if (loadOrnaments.length > 0) {
+            console.log(loadOrnaments)
         }
-    }, [loadedOrnaments])
+    }, [loadOrnaments])
 
     const handleBallClick = ({ x, y }) => {
         const rc = raycaster.current
@@ -22,31 +35,29 @@ export function Balls({ loadedOrnaments, raycaster }) {
         coords.y = -((y / gl.domElement.clientHeight) * 2 - 1)
         rc.setFromCamera(coords, camera)
 
-        const intersections = rc.intersectObject(ballsRef.current, true)
+        const intersections = rc.intersectObject(parentRef.current, true)
         if (intersections.length > 0) {
-            // intersections.forEach((currentObj, index) => {
-            //     const selected = currentObj.object
-            //     console.log(selected)
-            //     const color = new Color("red")
-            //     selected.material.color = color
-            // })
             let selected = intersections[0].object.parent
             if (selected.name.length === 0) selected = selected.parent
+            // selected.scale = new Vector3(3, 3, 3)
             console.log(selected)
         }
     }
 
     return (
-        <group ref={ballsRef} onPointerMove={handleBallClick} >
-            {loadedOrnaments.map((o, i) => {
-                return <group name={o.label} rotation={[-Math.PI / 2, 0, 0]} scale={2} key={i}>
-                    <group {...(o.label === "Snowspin" && { position: [0, 0, 0.075] })}>{ /* Pushing snowspin up as its position was wrong*/}
-                        {Object.keys(o.geometry).map((mesh, index) => {
-                            return <mesh key={index} geometry={nodes[mesh]["geometry"]} material={materials[o.geometry[mesh]]} />
-                        })}
-                    </group>
-                    <mesh geometry={nodes.Gancetto_palline_natalizie_01_0.geometry} material={materials.Materiale_241} position={[0.005, 0, 0.093]} />
-                </group>
+        <group ref={parentRef} onPointerMove={handleBallClick} >
+            {loadOrnaments.map((o, i) => {
+                if (!o.loaded) {
+                    setLoadOrnaments(loadOrnaments.map((lO) => {
+                        if (lO.uid === o.uid) lO['loaded'] = true
+                        return lO
+                    }))
+                    return <GenerateOrnament o={o} key={i} nodes={nodes} materials={materials} reference={(r) => {
+                        if (r) ballsRef.current.push(r)
+                    }} />
+                } else {
+                    return <GenerateOrnament o={o} key={i} nodes={nodes} materials={materials} reference={null} />
+                }
             })}
         </group>
     )
