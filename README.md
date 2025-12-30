@@ -5,4 +5,5 @@ Tasks(mvp):
 - [x] Init R3F with a box
 - [x] Load a tree and htmls
 - [x] Load instance of the ornament
-- [ ] Freely move the ornaments with mouse using raycasting
+- [x] Freely move the ornaments with mouse in x and y
+- [ ] Instead of in x and y, move the ornament in y and [x-z based on user viewport]

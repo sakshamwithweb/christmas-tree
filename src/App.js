@@ -1,10 +1,12 @@
-import { OrbitControls } from '@react-three/drei'
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Navbar from './components/Navbar'
 import { Items } from './components/Items'
 import { BallImg } from './components/BallImg'
 import { Balls } from './components/Balls'
+import { Return } from 'three/tsl'
+import { Vector3 } from 'three'
 
 const App = () => {
   const [present, setPresent] = useState(false)
@@ -12,6 +14,10 @@ const App = () => {
   const [areImgAvailable, setAreImgAvailable] = useState(false)
   const [loadOrnaments, setLoadOrnaments] = useState([])
   const raycaster = useRef()
+  const [selectedBall, setSelectedBall] = useState()
+  const cameraRef = useRef()
+  const vec = new Vector3();
+  const pos = new Vector3();
 
   useEffect(() => { /* Checking are images available */
     setInterval(() => {
@@ -22,6 +28,24 @@ const App = () => {
 
   const loadOrnament = (ornament) => {
     setLoadOrnaments([...loadOrnaments, { ornament: ornament, loaded: false, uid: Math.floor(Math.random() * 10000) }])
+  }
+
+  const handleMouseMove = ({ clientX, clientY }) => { // Sync in with the ball
+    if (!selectedBall) return
+
+    // Get mouse coords (between -1 and 1)
+    const x = (clientX / window.innerWidth) * 2 - 1
+    const y = - ((clientY / window.innerHeight) * 2 - 1)
+
+    // Convert mouse coords into ball position
+    vec.set(x, y, 0);
+    vec.unproject(cameraRef.current);
+    vec.sub(cameraRef.current.position).normalize();
+    var distance = - cameraRef.current.position.z / vec.z;
+    pos.copy(cameraRef.current.position).add(vec.multiplyScalar(distance));
+
+    // Assign the position to ball
+    selectedBall.ornament.position.set(pos.x, pos.y, 0)
   }
 
   const ornamentsList = useMemo(() => [ // Got from Balls.jsx
@@ -123,7 +147,7 @@ const App = () => {
     <div className='w-screen h-screen'>
       <Navbar present={present} setPresent={setPresent} />
 
-      <Canvas gl={{ preserveDrawingBuffer: true }}>
+      <Canvas onPointerMove={handleMouseMove} gl={{ preserveDrawingBuffer: true }}>
         <color args={["gray"]} attach="background" />
 
         <group> {/* Lights */}
@@ -134,10 +158,13 @@ const App = () => {
 
         {!areImgAvailable ? <BallImg images={images} ornamentsList={ornamentsList} /> : <></>} {/* <Tree /> */}
 
-        <Balls setLoadOrnaments={setLoadOrnaments} raycaster={raycaster} loadOrnaments={loadOrnaments} />
+        <Balls selectedBall={selectedBall} setSelectedBall={setSelectedBall} setLoadOrnaments={setLoadOrnaments} raycaster={raycaster} loadOrnaments={loadOrnaments} />
+
 
         <raycaster ref={raycaster} />
 
+        <PerspectiveCamera position={[0, 0, 5]} makeDefault ref={cameraRef} />
+        <gridHelper />
         <OrbitControls enableDamping />
       </Canvas>
       <Items loadOrnament={loadOrnament} areImgAvailable={areImgAvailable} images={images} ornamentsList={ornamentsList} />

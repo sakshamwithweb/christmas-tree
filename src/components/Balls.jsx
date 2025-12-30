@@ -15,17 +15,17 @@ const GenerateOrnament = ({ o, nodes, materials, reference }) => {
     </object3D>
 }
 
-export function Balls({ loadOrnaments, raycaster, setLoadOrnaments }) {
+export function Balls({ loadOrnaments, raycaster, setLoadOrnaments, selectedBall, setSelectedBall }) {
     const { nodes, materials } = useGLTF('/christmas_balls.glb')
     const { gl, camera } = useThree()
     const parentRef = useRef()
     const ballsRef = useRef([])
 
     useEffect(() => {
-        if (loadOrnaments.length > 0) {
-            console.log(loadOrnaments)
-        }
-    }, [loadOrnaments])
+        if (!selectedBall) return
+        selectedBall.ornament.scale.set(2.5, 2.5, 2.5)
+        // selectedBall.ornament.position.set(1, 1, 1)
+    }, [selectedBall])
 
     const handleBallClick = ({ x, y }) => {
         const rc = raycaster.current
@@ -39,13 +39,17 @@ export function Balls({ loadOrnaments, raycaster, setLoadOrnaments }) {
         if (intersections.length > 0) {
             let selected = intersections[0].object.parent
             if (selected.name.length === 0) selected = selected.parent
-            // selected.scale = new Vector3(3, 3, 3)
-            console.log(selected)
+            const selectedRef = ballsRef.current.find((ball) => ball.ornament.uuid === selected.uuid)
+            if (selectedBall) {
+                selectedBall.ornament.scale.set(2, 2, 2)
+                setSelectedBall()
+            }
+            else setSelectedBall(selectedRef)
         }
     }
 
     return (
-        <group ref={parentRef} onPointerMove={handleBallClick} >
+        <group ref={parentRef} onClick={handleBallClick} >
             {loadOrnaments.map((o, i) => {
                 if (!o.loaded) {
                     setLoadOrnaments(loadOrnaments.map((lO) => {
@@ -53,7 +57,7 @@ export function Balls({ loadOrnaments, raycaster, setLoadOrnaments }) {
                         return lO
                     }))
                     return <GenerateOrnament o={o} key={i} nodes={nodes} materials={materials} reference={(r) => {
-                        if (r) ballsRef.current.push(r)
+                        if (r) ballsRef.current.push({ ornament: r, uid: o.uid })
                     }} />
                 } else {
                     return <GenerateOrnament o={o} key={i} nodes={nodes} materials={materials} reference={null} />
