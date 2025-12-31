@@ -18,6 +18,7 @@ const App = () => {
   const cameraRef = useRef()
   const vec = new Vector3();
   const pos = new Vector3();
+  // const num = useRef(0)
 
   useEffect(() => { /* Checking are images available */
     setInterval(() => {
@@ -38,14 +39,15 @@ const App = () => {
     const y = - ((clientY / window.innerHeight) * 2 - 1)
 
     // Convert mouse coords into ball position
-    vec.set(x, y, 0);
-    vec.unproject(cameraRef.current);
-    vec.sub(cameraRef.current.position).normalize();
-    var distance = - cameraRef.current.position.z / vec.z;
-    pos.copy(cameraRef.current.position).add(vec.multiplyScalar(distance));
+    vec.set(x, y, 0); // Make 3d vector for mouse
+    vec.unproject(cameraRef.current); // Cnvrt to real world coords
+    vec.sub(cameraRef.current.position).normalize(); // Subtract camera position to convert the world point into a ray direction from the camera, then normalize it
+    var distance = - cameraRef.current.position.z / vec.z; // ray equation = P(t) = cameraPosition + vec * t || t tells How far travel from camera position. We wanna travel z = 0, so P(t) = 0, 0 =  cameraPosition + vec * t, - cameraPosition =  vec * t, hence: -cameraPosition / vec = t
+    pos.copy(cameraRef.current.position).add(vec.multiplyScalar(distance))
 
     // Assign the position to ball
-    selectedBall.ornament.position.set(pos.x, pos.y, 0)
+    // num.current += 0.01
+    selectedBall.ornament.position.set(pos.x, pos.y, pos.z)
   }
 
   const ornamentsList = useMemo(() => [ // Got from Balls.jsx
