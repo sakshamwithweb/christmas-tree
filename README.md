@@ -6,4 +6,5 @@ Tasks(mvp):
 - [x] Load a tree and htmls
 - [x] Load instance of the ornament
 - [x] Freely move the ornaments with mouse in x and y
-- [ ] Instead of in x and y, move the ornament in y and [x-z based on user viewport]
+- [x] Instead of in x and y, move the ornament in y and [x-z based on user viewport horizontally]
+- [ ] Add tree and move ornaments around tree on branches

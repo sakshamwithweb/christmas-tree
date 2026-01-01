@@ -5,7 +5,6 @@ import Navbar from './components/Navbar'
 import { Items } from './components/Items'
 import { BallImg } from './components/BallImg'
 import { Balls } from './components/Balls'
-import { Return } from 'three/tsl'
 import { Vector3 } from 'three'
 
 const App = () => {
@@ -16,8 +15,7 @@ const App = () => {
   const raycaster = useRef()
   const [selectedBall, setSelectedBall] = useState()
   const cameraRef = useRef()
-  const vec = new Vector3();
-  const pos = new Vector3();
+  const prev = useRef({ clientX: 0, clientY: 0 })
   // const num = useRef(0)
 
   useEffect(() => { /* Checking are images available */
@@ -33,21 +31,24 @@ const App = () => {
 
   const handleMouseMove = ({ clientX, clientY }) => { // Sync in with the ball
     if (!selectedBall) return
+    const prevCoords = prev.current
+    const deltaX = prevCoords.clientX === 0 ? 0 : clientX - prevCoords.clientX
+    const deltaY = prevCoords.clientY === 0 ? 0 : clientY - prevCoords.clientY
+    prevCoords.clientX = clientX
+    prevCoords.clientY = clientY
 
-    // Get mouse coords (between -1 and 1)
-    const x = (clientX / window.innerWidth) * 2 - 1
-    const y = - ((clientY / window.innerHeight) * 2 - 1)
+    const cameraVector = cameraRef.current.position.clone()
+    const factor = cameraVector.distanceTo(selectedBall.ornament.position) / 5.5 // For distance(ball covers larger area as it is close and smaller area as it is far so this neutralizes that. Not precise atm)
 
-    // Convert mouse coords into ball position
-    vec.set(x, y, 0); // Make 3d vector for mouse
-    vec.unproject(cameraRef.current); // Cnvrt to real world coords
-    vec.sub(cameraRef.current.position).normalize(); // Subtract camera position to convert the world point into a ray direction from the camera, then normalize it
-    var distance = - cameraRef.current.position.z / vec.z; // ray equation = P(t) = cameraPosition + vec * t || t tells How far travel from camera position. We wanna travel z = 0, so P(t) = 0, 0 =  cameraPosition + vec * t, - cameraPosition =  vec * t, hence: -cameraPosition / vec = t
-    pos.copy(cameraRef.current.position).add(vec.multiplyScalar(distance))
+    // For Y
+    selectedBall.ornament.position.y += -deltaY * 0.0065 * factor
 
-    // Assign the position to ball
-    // num.current += 0.01
-    selectedBall.ornament.position.set(pos.x, pos.y, pos.z)
+    const cameraRight = new Vector3(1, 0, 0)
+    cameraRight.applyQuaternion(cameraRef.current.quaternion)
+    cameraRight.y = 0
+    cameraRight.normalize()
+    // For Horizontal
+    selectedBall.ornament.position.add(cameraRight.multiplyScalar(deltaX * 0.0065 * factor))
   }
 
   const ornamentsList = useMemo(() => [ // Got from Balls.jsx
@@ -160,14 +161,15 @@ const App = () => {
 
         {!areImgAvailable ? <BallImg images={images} ornamentsList={ornamentsList} /> : <></>} {/* <Tree /> */}
 
-        <Balls selectedBall={selectedBall} setSelectedBall={setSelectedBall} setLoadOrnaments={setLoadOrnaments} raycaster={raycaster} loadOrnaments={loadOrnaments} />
+        <Balls selectedBall={selectedBall} prev={prev} setSelectedBall={setSelectedBall} setLoadOrnaments={setLoadOrnaments} raycaster={raycaster} loadOrnaments={loadOrnaments} />
+        {/* <Tree /> */}
 
 
         <raycaster ref={raycaster} />
 
         <PerspectiveCamera position={[0, 0, 5]} makeDefault ref={cameraRef} />
         <gridHelper />
-        <OrbitControls enableDamping />
+        <OrbitControls minPolarAngle={Math.PI * 0.5} maxPolarAngle={Math.PI * 0.5} enableZoom={false} enableDamping />
       </Canvas>
       <Items loadOrnament={loadOrnament} areImgAvailable={areImgAvailable} images={images} ornamentsList={ornamentsList} />
     </div>

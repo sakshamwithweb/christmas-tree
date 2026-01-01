@@ -15,7 +15,7 @@ const GenerateOrnament = ({ o, nodes, materials, reference }) => {
     </object3D>
 }
 
-export function Balls({ loadOrnaments, raycaster, setLoadOrnaments, selectedBall, setSelectedBall }) {
+export function Balls({ loadOrnaments, raycaster, setLoadOrnaments, selectedBall, setSelectedBall, prev }) {
     const { nodes, materials } = useGLTF('/christmas_balls.glb')
     const { gl, camera } = useThree()
     const parentRef = useRef()
@@ -42,6 +42,7 @@ export function Balls({ loadOrnaments, raycaster, setLoadOrnaments, selectedBall
             const selectedRef = ballsRef.current.find((ball) => ball.ornament.uuid === selected.uuid)
             if (selectedBall) {
                 selectedBall.ornament.scale.set(2, 2, 2)
+                prev.current = { clientX: 0, clientY: 0 }
                 setSelectedBall()
             }
             else setSelectedBall(selectedRef)
