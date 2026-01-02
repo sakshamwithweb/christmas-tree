@@ -1,9 +1,26 @@
 import React, { useMemo, useRef } from 'react'
 import { DragControls, useGLTF } from '@react-three/drei'
-import { Matrix4 } from 'three'
+import { Matrix4, Vector2 } from 'three'
+import { useThree } from '@react-three/fiber'
 
-const GenerateOrnament = ({ o, nodes, materials, controls, selectedOrnamentMatrix }) => {
-    const matrix = useMemo(() => new Matrix4(), [])
+const GenerateOrnament = ({ o, nodes, materials, controls, selectedOrnamentMatrix, raycaster, treeRef }) => {
+    const { camera } = useThree()
+    const matrix = useMemo(() => {
+        const m = new Matrix4()
+        const cameraPosition = camera?.position
+        if (cameraPosition && raycaster.current && treeRef.current) {
+            // Here find the center of tree relative to camera
+            // Cast a raycast from the center and see where it strickes and wherever it strickes, that's the point
+            const rc = raycaster.current
+            const coords = new Vector2(0, 0)
+            rc.setFromCamera(coords, camera)
+            const intersects = rc.intersectObject(treeRef.current)
+            const p = intersects[0].point
+            m.setPosition(p.x, p.y, p.z)
+        }
+        return m
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     const ref = useRef()
 
     const handleDragStart = () => {
@@ -28,18 +45,22 @@ const GenerateOrnament = ({ o, nodes, materials, controls, selectedOrnamentMatri
     </DragControls>
 }
 
-export function Balls({ loadOrnaments, setLoadOrnaments, controls, selectedOrnamentMatrix }) {
+export function Balls({ loadOrnaments, setLoadOrnaments, controls, selectedOrnamentMatrix, raycaster, treeRef }) {
     const { nodes, materials } = useGLTF('/christmas_balls.glb')
     const parentRef = useRef()
 
     return (
         <group ref={parentRef}>
             {loadOrnaments.map((o, i) => {
-                setLoadOrnaments(loadOrnaments.map((lO) => {
-                    if (lO.uid === o.uid) lO['loaded'] = true
-                    return lO
-                }))
-                return <GenerateOrnament selectedOrnamentMatrix={selectedOrnamentMatrix} controls={controls} o={o} key={i} nodes={nodes} materials={materials} />
+                if (!o.loaded) {
+                    setLoadOrnaments(loadOrnaments.map((lO) => {
+                        if (lO.uid === o.uid) lO['loaded'] = true
+                        return lO
+                    }))
+                    return <GenerateOrnament treeRef={treeRef} raycaster={raycaster} selectedOrnamentMatrix={selectedOrnamentMatrix} controls={controls} o={o} key={i} nodes={nodes} materials={materials} />
+                } else {
+                    return <GenerateOrnament treeRef={null} raycaster={null} selectedOrnamentMatrix={selectedOrnamentMatrix} controls={controls} o={o} key={i} nodes={nodes} materials={materials} />
+                }
             })}
         </group>
     )

@@ -169,7 +169,7 @@ const App = () => {
 
         {!areImgAvailable ? <BallImg images={images} ornamentsList={ornamentsList} /> : <Tree treeRef={treeRef} />}
 
-        <Balls selectedOrnamentMatrix={selectedOrnamentMatrix} controls={controls} setLoadOrnaments={setLoadOrnaments} loadOrnaments={loadOrnaments} />
+        <Balls treeRef={treeRef} raycaster={raycaster} selectedOrnamentMatrix={selectedOrnamentMatrix} controls={controls} setLoadOrnaments={setLoadOrnaments} loadOrnaments={loadOrnaments} />
 
         <raycaster ref={raycaster} />
         <mesh ref={mouseHelper} scale={0.02}>
