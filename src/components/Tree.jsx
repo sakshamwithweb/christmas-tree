@@ -10,10 +10,10 @@ Title: Pine Tree 2
 import React from 'react'
 import { useGLTF } from '@react-three/drei'
 
-export const Tree = (props) => {
+export const Tree = ({ treeRef }) => {
   const { nodes, materials } = useGLTF('/tree1.glb')
   return (
-    <group scale={0.3} position={[0,-1.5,0]} {...props} dispose={null}>
+    <group scale={0.3} position={[0, -1.5, 0]} ref={treeRef} dispose={null}>
       <group rotation={[-Math.PI / 2, 0, 0]}>
         <group rotation={[-1.611, -1.013, -1.605]} scale={[2.504, 3.777, 3.777]}>
           <mesh geometry={nodes.Pine_Tree_2_0.geometry} material={materials.Pine_Needles} />

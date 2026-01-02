@@ -5,7 +5,8 @@ import Navbar from './components/Navbar'
 import { Items } from './components/Items'
 import { BallImg } from './components/BallImg'
 import { Balls } from './components/Balls'
-import { Vector3 } from 'three'
+import { Tree } from './components/Tree'
+import { Matrix3, Vector2 } from 'three'
 
 const App = () => {
   const [present, setPresent] = useState(false)
@@ -13,10 +14,12 @@ const App = () => {
   const [areImgAvailable, setAreImgAvailable] = useState(false)
   const [loadOrnaments, setLoadOrnaments] = useState([])
   const raycaster = useRef()
-  const [selectedBall, setSelectedBall] = useState()
   const cameraRef = useRef()
-  const prev = useRef({ clientX: 0, clientY: 0 })
-  // const num = useRef(0)
+  const controls = useRef()
+  const coords = useMemo(() => new Vector2(), [])
+  const treeRef = useRef()
+  const mouseHelper = useRef()
+  const selectedOrnamentMatrix = useRef()
 
   useEffect(() => { /* Checking are images available */
     setInterval(() => {
@@ -29,26 +32,31 @@ const App = () => {
     setLoadOrnaments([...loadOrnaments, { ornament: ornament, loaded: false, uid: Math.floor(Math.random() * 10000) }])
   }
 
-  const handleMouseMove = ({ clientX, clientY }) => { // Sync in with the ball
-    if (!selectedBall) return
-    const prevCoords = prev.current
-    const deltaX = prevCoords.clientX === 0 ? 0 : clientX - prevCoords.clientX
-    const deltaY = prevCoords.clientY === 0 ? 0 : clientY - prevCoords.clientY
-    prevCoords.clientX = clientX
-    prevCoords.clientY = clientY
+  const handlePointerMove = ({ clientX, clientY }) => {
+    const rc = raycaster.current
+    if (!rc && !treeRef.current) return
 
-    const cameraVector = cameraRef.current.position.clone()
-    const factor = cameraVector.distanceTo(selectedBall.ornament.position) / 5.5 // For distance(ball covers larger area as it is close and smaller area as it is far so this neutralizes that. Not precise atm)
+    coords.x = (clientX / window.innerWidth) * 2 - 1
+    coords.y = -((clientY / window.innerHeight) * 2 - 1)
 
-    // For Y
-    selectedBall.ornament.position.y += -deltaY * 0.0065 * factor
+    rc.setFromCamera(coords, cameraRef.current)
 
-    const cameraRight = new Vector3(1, 0, 0)
-    cameraRight.applyQuaternion(cameraRef.current.quaternion)
-    cameraRight.y = 0
-    cameraRight.normalize()
-    // For Horizontal
-    selectedBall.ornament.position.add(cameraRight.multiplyScalar(deltaX * 0.0065 * factor))
+    const intersects = rc.intersectObject(treeRef.current, true)
+
+    if (intersects.length > 0) {
+      const p = intersects[0].point;
+      mouseHelper?.current.position.copy(p)
+
+      const normalMatrix = new Matrix3().getNormalMatrix(treeRef?.current.matrixWorld)
+
+      const n = intersects[0].face.normal.clone()
+      n.applyNormalMatrix(normalMatrix)
+      n.multiplyScalar(10)
+      n.add(intersects[0].point)
+      mouseHelper.current.lookAt(n)
+
+      if (selectedOrnamentMatrix.current) selectedOrnamentMatrix.current.setPosition(p.x, p.y, p.z)
+    }
   }
 
   const ornamentsList = useMemo(() => [ // Got from Balls.jsx
@@ -150,7 +158,7 @@ const App = () => {
     <div className='w-screen h-screen'>
       <Navbar present={present} setPresent={setPresent} />
 
-      <Canvas onPointerMove={handleMouseMove} gl={{ preserveDrawingBuffer: true }}>
+      <Canvas onPointerMove={handlePointerMove} gl={{ preserveDrawingBuffer: true }}>
         <color args={["gray"]} attach="background" />
 
         <group> {/* Lights */}
@@ -159,17 +167,19 @@ const App = () => {
           <pointLight position={[10, 0, 0]} decay={0} intensity={5} />
         </group>
 
-        {!areImgAvailable ? <BallImg images={images} ornamentsList={ornamentsList} /> : <></>} {/* <Tree /> */}
+        {!areImgAvailable ? <BallImg images={images} ornamentsList={ornamentsList} /> : <Tree treeRef={treeRef} />}
 
-        <Balls selectedBall={selectedBall} prev={prev} setSelectedBall={setSelectedBall} setLoadOrnaments={setLoadOrnaments} raycaster={raycaster} loadOrnaments={loadOrnaments} />
-        {/* <Tree /> */}
-
+        <Balls selectedOrnamentMatrix={selectedOrnamentMatrix} controls={controls} setLoadOrnaments={setLoadOrnaments} loadOrnaments={loadOrnaments} />
 
         <raycaster ref={raycaster} />
+        <mesh ref={mouseHelper} scale={0.02}>
+          <boxGeometry args={[0.1, 0.1, 5]} />
+          <meshNormalMaterial />
+        </mesh>
 
-        <PerspectiveCamera position={[0, 0, 5]} makeDefault ref={cameraRef} />
+        <PerspectiveCamera position={[0, 0, 6]} makeDefault ref={cameraRef} />
         <gridHelper />
-        <OrbitControls minPolarAngle={Math.PI * 0.5} maxPolarAngle={Math.PI * 0.5} enableZoom={false} enableDamping />
+        <OrbitControls ref={controls} enablePan={false} />
       </Canvas>
       <Items loadOrnament={loadOrnament} areImgAvailable={areImgAvailable} images={images} ornamentsList={ornamentsList} />
     </div>
