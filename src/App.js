@@ -34,7 +34,7 @@ const App = () => {
 
   const handlePointerMove = ({ clientX, clientY }) => {
     const rc = raycaster.current
-    if (!rc && !treeRef.current) return
+    if (!rc || !treeRef.current) return
 
     coords.x = (clientX / window.innerWidth) * 2 - 1
     coords.y = -((clientY / window.innerHeight) * 2 - 1)

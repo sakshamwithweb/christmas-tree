@@ -9,3 +9,5 @@ Tasks(mvp):
 - [x] Instead of in x and y, move the ornament in y and [x-z based on user viewport horizontally]
 - [x] Add tree and move ornaments around tree on branches
 - [ ] solve the layers err
+- [ ] Fix the Slider and add transitions
+- [ ] Work on "Present" btn and its function
