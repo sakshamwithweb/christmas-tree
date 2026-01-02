@@ -178,7 +178,6 @@ const App = () => {
         </mesh>
 
         <PerspectiveCamera position={[0, 0, 6]} makeDefault ref={cameraRef} />
-        <gridHelper />
         <OrbitControls ref={controls} enablePan={false} />
       </Canvas>
       <Items loadOrnament={loadOrnament} areImgAvailable={areImgAvailable} images={images} ornamentsList={ornamentsList} />

@@ -8,6 +8,10 @@ Tasks(mvp):
 - [x] Freely move the ornaments with mouse in x and y
 - [x] Instead of in x and y, move the ornament in y and [x-z based on user viewport horizontally]
 - [x] Add tree and move ornaments around tree on branches
-- [ ] solve the layers err
-- [ ] Fix the Slider and add transitions
+- [x] solve the layers err
+- [x] Fix the Slider and add transitions
+- [ ] Drop in front of nearest of camera when one clicks any item
+- [ ] Rename things in better way
 - [ ] Work on "Present" btn and its function
+- [ ] Give a design my tree option by which randomly add items on tree!
+- [ ] Make the code cleaner
