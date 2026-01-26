@@ -17,6 +17,7 @@ const PresentComp = ({ present, setPresent }) => {
                 setPresent(false)
             }, "image/png")
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [present])
     return <></>
 }
