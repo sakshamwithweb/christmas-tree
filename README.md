@@ -1,5 +1,22 @@
 ## Christmas-Tree
+
 Decorate your Christmas!
+
+**Link**: https://christmas-tree-ivory-nine.vercel.app/
+
+### Steps to run locally:
+```bash
+git clone https://github.com/sakshamwithweb/christmas-tree
+cd christmas-tree
+npm install
+npm run start
+```
+
+### Prerequisites:
+- Node.js (v18+)
+- Npm
+
+Need to work more on future but for now Thanks XD
 
 Tasks(mvp):
 - [x] Init R3F with a box

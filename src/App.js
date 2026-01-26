@@ -7,6 +7,7 @@ import { BallImg } from './components/BallImg'
 import { Balls } from './components/Balls'
 import { Tree } from './components/Tree'
 import { Matrix3, Vector2 } from 'three'
+import PresentComp from './components/PresentComp'
 
 const App = () => {
   const [present, setPresent] = useState(false)
@@ -187,6 +188,7 @@ const App = () => {
 
         <PerspectiveCamera position={[0, 0, 6]} makeDefault ref={cameraRef} />
         <OrbitControls ref={controls} enablePan={false} />
+        <PresentComp setPresent={setPresent} present={present} />
       </Canvas>
       <Items loadOrnament={loadOrnament} areImgAvailable={areImgAvailable} images={images} ornamentsList={ornamentsList} />
     </div>
