@@ -3,7 +3,7 @@ import { useGLTF } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { PerspectiveCamera, Vector3 } from 'three'
 
-export function EachBallImg({ i, nodes, materials, o, images }) {
+export function EachBallImg({ i, o, images, nodes, materials }) {
     const { gl, scene } = useThree()
 
     useEffect(() => {

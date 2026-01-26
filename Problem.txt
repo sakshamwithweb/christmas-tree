@@ -1,0 +1,11 @@
+In items.jsx, when click at div, it adds that item to loadOrnaments named state array inside an object, and in that object we also add loaded:false. In Balls.jsx, we do loadOrnaments.map but we check if loaded is false then we make it true and return.{{{But here we shouldn't change the array that is being mapped but we are having to as we don't want when next time something is added or removed to that array, the loaded of this is false}}}
+
+Why do we even need loaded? Because if we don't check o.loaded, then there will be no way to know whether that item is added or not and what is current item
+Why do we want ot know recent added item? i think because we are ??
+Lets try to delete
+
+
+
+- Solution 1: Instead of giving a loaded key, what if we just give the items but we also make a recentBall state and store the item that is then matched with item in map checked to know whether it is recent one or not??
+
+

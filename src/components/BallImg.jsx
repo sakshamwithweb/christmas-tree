@@ -7,7 +7,7 @@ export function BallImg({ images, ornamentsList }) {
     return (
         <group dispose={null}>
             {ornamentsList.map((o, i) => {
-                return <EachBallImg images={images} i={i} key={i} nodes={nodes} materials={materials} o={o} />
+                return <EachBallImg i={i} o={o} images={images} key={i} nodes={nodes} materials={materials} />
             })}
         </group>
     )

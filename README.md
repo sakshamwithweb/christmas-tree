@@ -12,6 +12,8 @@ Tasks(mvp):
 - [x] Fix the Slider and add transitions
 - [x] Drop in front of nearest of camera when one clicks any item
 - [ ] Hover and backspace or delete key to delete
+- [ ] Fix all code pls
+- [ ] resize on wheel
 - [ ] Rename things in better way
 - [ ] When take img, don't take the bg
 - [ ] Work on "Present" btn and its function

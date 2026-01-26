@@ -27,13 +27,12 @@ const GenerateOrnament = ({ o, nodes, materials, controls, selectedOrnamentMatri
         if (matrix) selectedOrnamentMatrix.current = matrix
         controls.current.enabled = false
     }
-
     const handleDragEnd = () => {
         selectedOrnamentMatrix.current = null
         controls.current.enabled = true
     }
 
-    return <DragControls ref={ref} matrix={matrix} autoTransform={false} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+    return <DragControls onHover={(e) => { console.log(e) }} ref={ref} matrix={matrix} autoTransform={false} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <object3D name={o.ornament.label} rotation={[-Math.PI / 2, 0, 0]} scale={2}>
             <object3D {...(o.ornament.label === "Snowspin" && { position: [0, 0, 0.075] })}>{ /* Pushing snowspin up as its position was wrong*/}
                 {Object.keys(o.ornament.geometry).map((mesh, index) => {
@@ -45,22 +44,13 @@ const GenerateOrnament = ({ o, nodes, materials, controls, selectedOrnamentMatri
     </DragControls>
 }
 
-export function Balls({ loadOrnaments, setLoadOrnaments, controls, selectedOrnamentMatrix, raycaster, treeRef }) {
+export function Balls({ loadOrnaments, controls, selectedOrnamentMatrix, raycaster, treeRef, deleteOrnament }) {
     const { nodes, materials } = useGLTF('/christmas_balls.glb')
-    const parentRef = useRef()
 
     return (
-        <group ref={parentRef}>
+        <group>
             {loadOrnaments.map((o, i) => {
-                if (!o.loaded) {
-                    setLoadOrnaments(loadOrnaments.map((lO) => {
-                        if (lO.uid === o.uid) lO['loaded'] = true
-                        return lO
-                    }))
-                    return <GenerateOrnament treeRef={treeRef} raycaster={raycaster} selectedOrnamentMatrix={selectedOrnamentMatrix} controls={controls} o={o} key={i} nodes={nodes} materials={materials} />
-                } else {
-                    return <GenerateOrnament treeRef={null} raycaster={null} selectedOrnamentMatrix={selectedOrnamentMatrix} controls={controls} o={o} key={i} nodes={nodes} materials={materials} />
-                }
+                return <GenerateOrnament treeRef={treeRef} raycaster={raycaster} selectedOrnamentMatrix={selectedOrnamentMatrix} controls={controls} o={o} key={i} nodes={nodes} materials={materials} />
             })}
         </group>
     )

@@ -22,14 +22,22 @@ const App = () => {
   const selectedOrnamentMatrix = useRef()
 
   useEffect(() => { /* Checking are images available */
-    setInterval(() => {
-      if (images.current.length === ornamentsList.length) setAreImgAvailable(true)
+    const interval = setInterval(() => {
+      if (images.current.length === ornamentsList.length) {
+        setAreImgAvailable(true)
+        clearInterval(interval)
+      }
     }, 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const loadOrnament = (ornament) => {
     setLoadOrnaments([...loadOrnaments, { ornament: ornament, loaded: false, uid: Math.floor(Math.random() * 10000) }])
+  }
+
+  const deleteOrnament = (uid) => {
+    console.log(loadOrnaments)
+    // setLoadOrnaments(loadOrnaments.filter((o) => uid !== o.uid))
   }
 
   const handlePointerMove = ({ clientX, clientY }) => {
@@ -169,7 +177,7 @@ const App = () => {
 
         {!areImgAvailable ? <BallImg images={images} ornamentsList={ornamentsList} /> : <Tree treeRef={treeRef} />}
 
-        <Balls treeRef={treeRef} raycaster={raycaster} selectedOrnamentMatrix={selectedOrnamentMatrix} controls={controls} setLoadOrnaments={setLoadOrnaments} loadOrnaments={loadOrnaments} />
+        <Balls deleteOrnament={deleteOrnament} treeRef={treeRef} raycaster={raycaster} selectedOrnamentMatrix={selectedOrnamentMatrix} controls={controls} loadOrnaments={loadOrnaments} />
 
         <raycaster ref={raycaster} />
         <mesh ref={mouseHelper} scale={0.02}>
